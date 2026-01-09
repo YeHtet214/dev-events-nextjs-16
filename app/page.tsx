@@ -9,7 +9,7 @@ const Home = () => {
       <p className="text-center mt-5">Hackathons, Meetups and Conferences, All in One Place</p>
 
       <ExploreBtn />
-
+      
       <div className="mt-20 space-y-">
         <h3>Featured Events</h3>
 
