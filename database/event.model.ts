@@ -1,4 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { NextMiddlewareResult } from 'next/dist/server/web/types';
+import { NextResponse } from 'next/server';
 
 // TypeScript interface for Event document
 export interface IEvent extends Document {
@@ -106,7 +108,7 @@ const EventSchema = new Schema<IEvent>(
 );
 
 // Pre-save hook: auto-generate slug from title and normalize date/time
-EventSchema.pre('save', function (next) {
+EventSchema.pre('save', function () {
   // Generate slug only if title is new or modified
   if (this.isModified('title')) {
     this.slug = this.title
@@ -121,7 +123,7 @@ EventSchema.pre('save', function (next) {
   if (this.isModified('date')) {
     const parsedDate = new Date(this.date);
     if (isNaN(parsedDate.getTime())) {
-      return next(new Error('Invalid date format'));
+      throw new Error('Invalid date format');
     }
     this.date = parsedDate.toISOString().split('T')[0];
   }
@@ -130,11 +132,9 @@ EventSchema.pre('save', function (next) {
   if (this.isModified('time')) {
     const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
     if (!timeRegex.test(this.time)) {
-      return next(new Error('Time must be in HH:MM format'));
+      throw new Error('Time must be in HH:MM format');
     }
   }
-
-  next();
 });
 
 // Create unique index on slug

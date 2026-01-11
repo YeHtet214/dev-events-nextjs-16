@@ -11,8 +11,9 @@ interface Props {
 }
 
 const EventCard = ({ title, image, slug, location, date, time }: Props) => {
+
   return (
-    <Link href="/events" id="event-card">
+    <Link href={`/events/${slug}`} id="event-card">
       <Image src={image} alt="event-card" width={410} height={300} className="poster" />
 
       <div className="flex flex-row gap">
